@@ -9,6 +9,7 @@ vim.o.expandtab = true
 vim.o.number = true
 vim.o.relativenumber = true
 vim.o.ruler = true
+vim.o.scrolloff = 8
 
 vim.o.autoindent = true
 vim.o.smartindent = true
@@ -17,11 +18,21 @@ vim.cmd('filetype plugin indent on')
 
 vim.g.netrw_banner = 0
 vim.g.netrw_liststyle = 3
+
 vim.keymap.set("n", "<leader>e", function()
   vim.cmd("vert Lexplore!")
 end)
-
+vim.keymap.set("n", "<leader>r", vim.cmd.UndotreeToggle)
 vim.keymap.set("i", "jj", "<Esc>", { noremap = true, silent = true })
+
+-- local function ask()
+--   vim.cmd([[
+--     r !curl -s 'https://ai.filyys.dev/ask' \
+--       --data-urlencode 'key=1313' \
+--       --data-urlencode 'q=hello'
+--   ]])
+-- end
+-- vim.api.nvim_create_user_command("Ask", ask, {})
 
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -45,7 +56,9 @@ require("lazy").setup({
   spec = {
     {
       "catppuccin/nvim",
+      "mbbill/undotree",
       "nvim-treesitter/nvim-treesitter",
+      'numToStr/Comment.nvim',
       build = ":TSUpdate",
     }
   },
@@ -67,3 +80,9 @@ require("nvim-treesitter.configs").setup {
     enable = true,
   },
 }
+
+-- Setup Comment.nvim
+require('Comment').setup()
+
+-- Setup LSP
+require("lazy").setup("lsp")

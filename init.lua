@@ -25,14 +25,24 @@ end)
 vim.keymap.set("n", "<leader>r", vim.cmd.UndotreeToggle)
 vim.keymap.set("i", "jj", "<Esc>", { noremap = true, silent = true })
 
--- local function ask()
---   vim.cmd([[
---     r !curl -s 'https://ai.filyys.dev/ask' \
---       --data-urlencode 'key=1313' \
---       --data-urlencode 'q=hello'
---   ]])
--- end
--- vim.api.nvim_create_user_command("Ask", ask, {})
+vim.api.nvim_create_user_command("Ask", function(opts)
+  vim.notify("Fetching message...", vim.log.levels.INFO)
+
+  vim.fn.jobstart({
+    "curl", "--get", "-s", "https://ai.filyys.dev/ask",
+    "--data-urlencode", "k=1313",
+    "--data-urlencode", "q=" .. table.concat(opts.fargs, " "),
+  }, {
+    stdout_buffered = true,
+    on_stdout = function(_, data)
+      if data and #data <= 0 then return end
+        vim.api.nvim_put(data, "l", true, true)
+
+        vim.notify("Done.", vim.log.levels.INFO)
+        vim.defer_fn(function() vim.notify("", vim.log.levels.INFO) end, 3000)
+    end,
+  })
+end, { nargs = "+" })
 
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -59,6 +69,8 @@ require("lazy").setup({
       "mbbill/undotree",
       "nvim-treesitter/nvim-treesitter",
       'numToStr/Comment.nvim',
+      "saghen/blink.cmp",
+      "neovim/nvim-lspconfig",
       build = ":TSUpdate",
     }
   },
@@ -86,3 +98,4 @@ require('Comment').setup()
 
 -- Setup LSP
 require("lazy").setup("lsp")
+require("lsp-config")

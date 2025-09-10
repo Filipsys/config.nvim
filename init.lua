@@ -13,18 +13,27 @@ vim.o.scrolloff = 8
 
 vim.o.autoindent = true
 vim.o.smartindent = true
-vim.cmd('syntax enable')
-vim.cmd('filetype plugin indent on')
+vim.cmd("syntax enable")
+vim.cmd("filetype plugin indent on")
 
 vim.g.netrw_banner = 0
 vim.g.netrw_liststyle = 3
 
+vim.o.timeoutlen = 3000
+
+-- Keymaps
 vim.keymap.set("n", "<leader>e", function()
   vim.cmd("vert Lexplore!")
 end)
 vim.keymap.set("n", "<leader>r", vim.cmd.UndotreeToggle)
 vim.keymap.set("i", "jj", "<Esc>", { noremap = true, silent = true })
 
+-- Multi-line macros
+local esc = vim.api.nvim_replace_termcodes("<Esc>", true, true, true)
+vim.keymap.set("v", "<leader>javac",  "yoSystem.out.println(\"" .. esc .. "pa: \" + " .. esc .. "pa);" .. esc)
+vim.keymap.set("v", "<leader>jsc", "yoconsole.log(\"" .. esc .. "pa: \", " .. esc .. "pa);")
+
+-- Functions
 vim.api.nvim_create_user_command("Ask", function(opts)
   vim.notify("Fetching message...", vim.log.levels.INFO)
 

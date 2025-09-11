@@ -8,7 +8,7 @@ vim.o.expandtab = true
 
 vim.o.number = true
 vim.o.relativenumber = true
-vim.o.ruler = true
+vim.o.ruler = false
 vim.o.scrolloff = 8
 
 vim.o.autoindent = true
@@ -21,11 +21,21 @@ vim.g.netrw_liststyle = 3
 
 vim.o.timeoutlen = 3000
 
--- Keymaps
-vim.keymap.set("n", "<leader>e", function()
-  vim.cmd("vert Lexplore!")
-end)
+-- Undotree config
 vim.keymap.set("n", "<leader>r", vim.cmd.UndotreeToggle)
+
+if vim.fn.has("persistent_undo") == 1 then
+  local target_path = vim.fn.expand("~/.undodir")
+
+  if vim.fn.isdirectory(target_path) == 0 then
+    vim.fn.mkdir(target_path, "p", 448)
+  end
+  vim.o.undodir = target_path
+  vim.o.undofile = true
+end
+
+-- Keymaps
+vim.keymap.set("n", "<leader>e", function() vim.cmd("vert Lexplore!") end)
 vim.keymap.set("i", "jj", "<Esc>", { noremap = true, silent = true })
 
 -- Multi-line macros
@@ -74,21 +84,41 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
   spec = {
     {
-      "catppuccin/nvim",
+      "slugbyte/lackluster.nvim",
       "mbbill/undotree",
       "nvim-treesitter/nvim-treesitter",
-      'numToStr/Comment.nvim',
+      "numToStr/Comment.nvim",
       "saghen/blink.cmp",
+      "williamboman/mason.nvim",
+      "rafamadriz/friendly-snippets",
+      build = ":TSUpdate"
+    },
+    {
+      "williamboman/mason-lspconfig.nvim",
+      opts = {
+        ensure_installed = {"lua_ls", "tsserver", "java-language-server",
+                            "vscode-html-languageserver", "vscode-css-languageserver"},
+        automatic_installation = true,
+      }
+    },
+    {
       "neovim/nvim-lspconfig",
-      build = ":TSUpdate",
+      config = function()
+        local lspconfig = require("lspconfig")
+        local capabilities = require("blink.cmp").get_lsp_capabilities()
+
+        lspconfig.util.default_config.capabilities = vim.tbl_deep_extend(
+          "force", lspconfig.util.default_config.capabilities, capabilities
+        )
+      end,
     }
   },
-  install = { colorscheme = { "habamax" } },
+  install = {},
   checker = { enabled = true },
 })
 
 require("nvim-treesitter.configs").setup {
-  ensure_installed = { "lua", "javascript", "typescript", "python", "html", "css" },
+  ensure_installed = { "lua", "java", "javascript", "typescript", "python", "html", "css" },
   sync_install = false,
   auto_install = true,
 
@@ -103,8 +133,29 @@ require("nvim-treesitter.configs").setup {
 }
 
 -- Setup Comment.nvim
-require('Comment').setup()
+require("Comment").setup()
 
--- Setup LSP
-require("lazy").setup("lsp")
-require("lsp-config")
+-- Blink.cmp
+require("blink.cmp").setup({
+  fuzzy = { implementation = "lua" },
+
+  completion = {
+    trigger = {
+      show_on_keyword = true,
+      show_on_trigger_character = true,
+      show_on_insert = false,
+
+      show_on_backspace = false,
+      show_on_backspace_in_keyword = false,
+    },
+
+    menu = { auto_show = true },
+    ghost_text = { enabled = true },
+  },
+
+  sources = { default = { "lsp", "path", "buffer", "snippets" } },
+})
+
+-- Small theme tweaks 
+vim.cmd("color lackluster")
+vim.api.nvim_set_hl(0, "StatusLine", { fg = "#717171", bg = "NONE" })

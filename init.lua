@@ -16,6 +16,11 @@ vim.o.smartindent = true
 vim.cmd("syntax enable")
 vim.cmd("filetype plugin indent on")
 
+vim.o.incsearch = true
+vim.o.hlsearch = false
+
+vim.o.updatetime = 100
+
 vim.g.netrw_banner = 0
 vim.g.netrw_liststyle = 3
 
@@ -23,7 +28,6 @@ vim.o.timeoutlen = 3000
 
 -- Undotree config
 vim.keymap.set("n", "<leader>r", vim.cmd.UndotreeToggle)
-
 if vim.fn.has("persistent_undo") == 1 then
   local target_path = vim.fn.expand("~/.undodir")
 
@@ -42,6 +46,13 @@ vim.keymap.set("i", "jj", "<Esc>", { noremap = true, silent = true })
 local esc = vim.api.nvim_replace_termcodes("<Esc>", true, true, true)
 vim.keymap.set("v", "<leader>javac",  "yoSystem.out.println(\"" .. esc .. "pa: \" + " .. esc .. "pa);" .. esc)
 vim.keymap.set("v", "<leader>jsc", "yoconsole.log(\"" .. esc .. "pa: \", " .. esc .. "pa);")
+
+-- Events
+vim.api.nvim_create_autocmd("TextYankPost", {
+  callback = function()
+    vim.highlight.on_yank()
+  end
+})
 
 -- Functions
 vim.api.nvim_create_user_command("Ask", function(opts)
@@ -89,9 +100,12 @@ require("lazy").setup({
       "nvim-treesitter/nvim-treesitter",
       "numToStr/Comment.nvim",
       "saghen/blink.cmp",
-      "williamboman/mason.nvim",
       "rafamadriz/friendly-snippets",
       build = ":TSUpdate"
+    },
+    {
+      "mason-org/mason.nvim",
+      opts = {}
     },
     {
       "williamboman/mason-lspconfig.nvim",
@@ -111,7 +125,7 @@ require("lazy").setup({
           "force", lspconfig.util.default_config.capabilities, capabilities
         )
       end,
-    }
+    },
   },
   install = {},
   checker = { enabled = true },

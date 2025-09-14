@@ -19,12 +19,11 @@ vim.cmd("filetype plugin indent on")
 vim.o.incsearch = true
 vim.o.hlsearch = false
 
-vim.o.updatetime = 100
+vim.o.updatetime = 50
+vim.o.timeoutlen = 3000
 
 vim.g.netrw_banner = 0
 vim.g.netrw_liststyle = 3
-
-vim.o.timeoutlen = 3000
 
 -- Undotree config
 vim.keymap.set("n", "<leader>r", vim.cmd.UndotreeToggle)
@@ -126,12 +125,33 @@ require("lazy").setup({
         )
       end,
     },
+    {
+      "folke/which-key.nvim",
+      event = "VeryLazy",
+      opts = {
+        preset = "helix",
+        delay = 0,
+
+        win = {
+          title = false,
+          border = "none",
+          padding = { 0, 0 },
+
+          wo = { winblend = 100 },
+        },
+
+        icons = {
+          mappings = false,
+          separator = "",
+        },
+      },
+    }
   },
   install = {},
   checker = { enabled = true },
 })
 
-require("nvim-treesitter.configs").setup {
+require("nvim-treesitter.configs").setup({
   ensure_installed = { "lua", "java", "javascript", "typescript", "python", "html", "css" },
   sync_install = false,
   auto_install = true,
@@ -144,7 +164,7 @@ require("nvim-treesitter.configs").setup {
   indent = {
     enable = true,
   },
-}
+})
 
 -- Setup Comment.nvim
 require("Comment").setup()

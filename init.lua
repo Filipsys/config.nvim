@@ -109,7 +109,7 @@ require("lazy").setup({
     {
       "williamboman/mason-lspconfig.nvim",
       opts = {
-        ensure_installed = {"lua_ls", "tsserver", "java-language-server",
+        ensure_installed = {"lua_ls", "ts_ls", "java-language-server",
                             "vscode-html-languageserver", "vscode-css-languageserver"},
         automatic_installation = true,
       }

@@ -1,6 +1,6 @@
-require("lua.plugins.lazy-nvim")
-require("lua.plugins.blink-cmp")
-require("lua.plugins.treesitter-config")
+require("plugins.lazy-nvim")
+require("plugins.blink-cmp")
+require("plugins.treesitter-config")
 
 require("configs.sets")
 require("configs.theme")

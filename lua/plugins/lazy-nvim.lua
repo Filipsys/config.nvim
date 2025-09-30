@@ -33,7 +33,7 @@ require("lazy").setup({
       "williamboman/mason-lspconfig.nvim",
       opts = {
         ensure_installed = {"lua_ls", "ts_ls", "java-language-server",
-                            "html-lsp", "css-lsp"},
+                            "html-lsp", "cssls"},
         automatic_installation = true,
       }
     },

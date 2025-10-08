@@ -1,4 +1,5 @@
 vim.keymap.set("n", "<leader>e", function() vim.cmd("vert Lexplore!") end, { desc = "Open netrw" })
+vim.keymap.set("n", "<leader>q", function() vim.cmd("%s/'/\"/g") end, { desc = "Switch to double quotes" })
 vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, { desc = "Show diagnostics" })
 vim.keymap.set("i", "jj", "<Esc>", { noremap = true, silent = true })
 

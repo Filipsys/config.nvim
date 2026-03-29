@@ -18,10 +18,9 @@ require("lazy").setup({
   spec = {
     {
       "slugbyte/lackluster.nvim",
-      "mbbill/undotree",
       "nvim-treesitter/nvim-treesitter",
       "numToStr/Comment.nvim",
-      "rafamadriz/friendly-snippets",
+      "mbbill/undotree",
       "saghen/blink.cmp",
       build = ":TSUpdate"
     },
@@ -32,8 +31,7 @@ require("lazy").setup({
     {
       "williamboman/mason-lspconfig.nvim",
       opts = {
-        ensure_installed = {"lua_ls", "ts_ls", "java_language_server",
-                            "html", "cssls"},
+        ensure_installed = {"lua_ls", "clangd", "java_language_server"},
         automatic_installation = true,
       }
     },
@@ -68,8 +66,67 @@ require("lazy").setup({
           separator = "",
         },
       },
+    },
+    {
+      "ray-x/lsp_signature.nvim",
+      event = "InsertEnter",
+      opts = {
+        bind = true,
+        max_width = 10,
+        max_height = 4,
+        doc_lines = 0,
+        hint_enable = false,
+        toggle_key = "<D-x>",
+        handler_opts = {
+          border = "none",
+        }
+      }
+    },
+    {
+      "dmtrKovalenko/fff.nvim",
+      build = function()
+        require("fff.download").download_or_build_binary()
+      end,
+
+      opts = {
+        debug = {
+          enabled = true,
+          show_scores = true,
+        },
+      },
+
+      lazy = false,
+      keys = {
+        {
+          "ff",
+          function() require("fff").find_files() end,
+          desc = "FFFind files",
+        },
+        {
+          "fg",
+          function() require("fff").live_grep() end,
+          desc = "LiFFFe grep",
+        },
+        {
+          "fz",
+          function() require("fff").live_grep({
+            grep = {
+              modes = { "fuzzy", "plain" }
+            }
+          }) end,
+          desc = "Live fffuzy grep",
+        },
+        {
+          "fc",
+          function() require("fff").live_grep({ query = vim.fn.expand("<cword>") }) end,
+          desc = "Search current word",
+        },
+      }
     }
   },
   install = {},
-  checker = { enabled = true },
+  checker = {
+    enabled = true,
+    notify = false
+  },
 })

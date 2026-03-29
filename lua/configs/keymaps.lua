@@ -7,7 +7,7 @@ local function jmp(char)
 end
 
 vim.keymap.set("n", "<leader>e", function() vim.cmd("vert Lexplore!") end, { desc = "Open netrw" })
-vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, { desc = "Show diagnostics" })
+vim.keymap.set("n", "<leader>sd", vim.diagnostic.open_float, { desc = "Show diagnostics" })
 
 vim.keymap.set("n", "<leader>q", function()
   vim.cmd([[silent! %s/\\'/||SINGLEQUOTE||/g]])
@@ -33,3 +33,21 @@ vim.keymap.set("i", "(", "()<Left>")
 vim.keymap.set("i", "}", function() return jmp("}") end, { expr = true })
 vim.keymap.set("i", "]", function() return jmp("]") end, { expr = true })
 vim.keymap.set("i", ")", function() return jmp(")") end, { expr = true })
+
+vim.keymap.set("n", "/", function()
+  vim.o.hlsearch = true
+  return "/"
+end, { expr = true, silent = true })
+vim.keymap.set("n", "<leader>h", function()
+  vim.o.hlsearch = false
+end, { desc = "Clear hlsearch" })
+
+vim.keymap.set({"n", "v"}, "<leader>y", "\"+y", { desc = "Copy to clipboard" })
+vim.keymap.set({"n", "v"}, "<leader>d", "\"+d", { desc = "Copy & delete to clipboard" })
+vim.keymap.set({"n", "v"}, "<leader>p", "\"+p", { desc = "Paste from clipboard" })
+vim.keymap.set({"n", "v"}, "<leader>P", "<CR><Esc>\"+p", { desc = "Paste below from clipboard" })
+
+vim.keymap.set("n", "<C-j>", ":m .+1<CR>==", { silent = true })
+vim.keymap.set("n", "<C-k>", ":m .-2<CR>==", { silent = true })
+vim.keymap.set("v", "<C-j>", ":m '>+1<CR>gv=gv", { silent = true })
+vim.keymap.set("v", "<C-k>", ":m '<-2<CR>gv=gv", { silent = true })

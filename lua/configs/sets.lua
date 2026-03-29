@@ -17,7 +17,7 @@ vim.cmd("syntax enable")
 vim.cmd("filetype plugin indent on")
 
 vim.o.incsearch = true
-vim.o.hlsearch = false
+vim.o.hlsearch = true
 
 vim.o.updatetime = 50
 vim.o.timeoutlen = 3000

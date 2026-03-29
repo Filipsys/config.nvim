@@ -10,3 +10,4 @@ require("configs.keymaps")
 require("configs.macros")
 
 require("Comment").setup()
+require("lsp_signature").setup()
